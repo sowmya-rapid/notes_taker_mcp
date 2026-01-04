@@ -1,7 +1,13 @@
 [project]
 name = "note-taker-mcp"
 version = "0.1.0"
-dependencies = ["mcp"]
+dependencies = [
+  "mcp>=1.25.0",
+  "smithery>=0.3.1"
+]
+
+[project.scripts]
+note-taker-mcp = "note_taker_mcp_server:main"
 
 [build-system]
 requires = ["setuptools"]

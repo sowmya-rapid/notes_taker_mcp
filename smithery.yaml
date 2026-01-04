@@ -1,6 +1,1 @@
-name: note-taker-mcp
 runtime: python
-entrypoint: note_taker_mcp_server.py
-
-transport:
-  type: streamable-http
