@@ -1,13 +1,6 @@
 name: note-taker-mcp
-description: MCP server that lets an AI create, update, and search notes
 runtime: python
 entrypoint: note_taker_mcp_server.py
 
 transport:
   type: streamable-http
-
-tools:
-  - create_note
-  - append_note
-  - get_note
-  - search_notes
