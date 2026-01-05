@@ -14,7 +14,7 @@ dependencies = [
 note-taker-mcp = "note_taker_mcp.server:main"
 
 [tool.smithery]
-# Points to: folder.file:function
+# Format is package.module:function
 server = "note_taker_mcp.server:create_server"
 
 [tool.hatch.build.targets.wheel]
