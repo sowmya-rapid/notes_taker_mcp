@@ -43,3 +43,5 @@ def search_notes(query: str) -> list:
 
 def main():
     mcp.run()
+
+main()
