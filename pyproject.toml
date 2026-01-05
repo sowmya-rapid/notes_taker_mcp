@@ -2,8 +2,10 @@
 name = "note-taker-mcp"
 version = "0.1.0"
 dependencies = [
-  "mcp>=1.25.0",
-  "smithery>=0.3.1"
+  "mcp[cli]>=1.25.0",
+  "smithery>=0.3.1",
+  "uvicorn>=0.30.0",
+  "sse-starlette>=2.0.0"
 ]
 
 [project.scripts]

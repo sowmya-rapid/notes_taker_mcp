@@ -1,11 +1,13 @@
 from mcp.server.fastmcp import FastMCP
 import uuid
+import os
 from typing import Dict, List
 
+# Initialize FastMCP
 mcp = FastMCP("Note Taker MCP")
 
+# In-memory storage (Note: this will reset when the server restarts)
 NOTES: Dict[str, dict] = {}
-
 
 @mcp.tool()
 def create_note(title: str, content: str, tags: List[str] = []) -> dict:
@@ -18,7 +20,6 @@ def create_note(title: str, content: str, tags: List[str] = []) -> dict:
     }
     return {"status": "created", "note_id": note_id}
 
-
 @mcp.tool()
 def append_note(note_id: str, content: str) -> dict:
     if note_id not in NOTES:
@@ -26,11 +27,9 @@ def append_note(note_id: str, content: str) -> dict:
     NOTES[note_id]["content"] += "\n" + content
     return {"status": "updated", "note_id": note_id}
 
-
 @mcp.tool()
 def get_note(note_id: str) -> dict:
     return NOTES.get(note_id, {"error": "Note not found"})
-
 
 @mcp.tool()
 def search_notes(query: str) -> list:
@@ -40,8 +39,13 @@ def search_notes(query: str) -> list:
         or query.lower() in note["content"].lower()
     ]
 
-
 def main():
-    mcp.run()
+    # Smithery deployments need to run as a web server (SSE) 
+    # instead of a local command-line tool (Stdio).
+    port = int(os.getenv("PORT", 8000))
+    
+    # We explicitly set the transport to "sse" for the cloud environment
+    mcp.run(transport="sse", port=port)
 
-main()
+if __name__ == "__main__":
+    main()
