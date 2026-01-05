@@ -1,21 +1,21 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 [project]
 name = "note-taker-mcp"
 version = "0.1.0"
 dependencies = [
     "mcp>=1.25.0",
     "smithery>=0.4.4",
-    "uvicorn>=0.30.0",
-    "sse-starlette>=2.0.0"
 ]
 
 [project.scripts]
-# This defines the command 'note-taker-mcp'
-note-taker-mcp = "note_taker_mcp_server:main"
+note-taker-mcp = "note_taker_mcp.server:main"
 
 [tool.smithery]
-# FORMAT: "filename_without_extension:function_name"
-server = "note_taker_mcp_server:create_server"
+# Points to: folder.file:function
+server = "note_taker_mcp.server:create_server"
 
-[build-system]
-requires = ["setuptools", "wheel"]
-build-backend = "setuptools.build_meta"
+[tool.hatch.build.targets.wheel]
+packages = ["src/note_taker_mcp"]
