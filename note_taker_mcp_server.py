@@ -45,7 +45,7 @@ def main():
     port = int(os.getenv("PORT", 8000))
     
     # We explicitly set the transport to "sse" for the cloud environment
-    mcp.run(transport="sse", port=port)
+    mcp.run(transport="sse", port=port, host="0.0.0.0")
 
 if __name__ == "__main__":
     main()
