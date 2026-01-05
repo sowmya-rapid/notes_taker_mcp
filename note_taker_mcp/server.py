@@ -1,18 +1,15 @@
 import uuid
-from typing import Dict, List
+from typing import Dict, List, Optional
 from mcp.server.fastmcp import Context, FastMCP
 from smithery.decorators import smithery
 
-# In-memory store (OK for demo)
+# In-memory note store (demo)
 NOTES: Dict[str, dict] = {}
 
 
 @smithery.server()
 def create_server():
-    """
-    Smithery factory function.
-    DO NOT call .run() here.
-    """
+    """Create and configure the Note Taker MCP server."""
     mcp = FastMCP("Note Taker MCP")
 
     @mcp.tool()
@@ -20,9 +17,8 @@ def create_server():
         title: str,
         content: str,
         ctx: Context,
-        tags: List[str] | None = None,
+        tags: Optional[List[str]] = None,
     ) -> dict:
-        """Create a new note."""
         note_id = str(uuid.uuid4())
         NOTES[note_id] = {
             "note_id": note_id,
@@ -34,7 +30,6 @@ def create_server():
 
     @mcp.tool()
     def append_note(note_id: str, content: str, ctx: Context) -> dict:
-        """Append text to an existing note."""
         if note_id not in NOTES:
             return {"error": "Note not found"}
         NOTES[note_id]["content"] += "\n" + content
@@ -42,12 +37,10 @@ def create_server():
 
     @mcp.tool()
     def get_note(note_id: str, ctx: Context) -> dict:
-        """Retrieve a note."""
         return NOTES.get(note_id, {"error": "Note not found"})
 
     @mcp.tool()
     def search_notes(query: str, ctx: Context) -> list:
-        """Search notes."""
         q = query.lower()
         return [
             note for note in NOTES.values()
