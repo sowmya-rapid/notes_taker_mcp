@@ -10,12 +10,11 @@ dependencies = [
     "smithery>=0.4.4",
 ]
 
-[project.scripts]
-note-taker-mcp = "note_taker_mcp.server:main"
-
 [tool.smithery]
-# Format is package.module:function
 server = "note_taker_mcp.server:create_server"
 
+[tool.hatch.build]
+sources = ["src"]
+
 [tool.hatch.build.targets.wheel]
-packages = ["src/note_taker_mcp"]
+packages = ["note_taker_mcp"]
