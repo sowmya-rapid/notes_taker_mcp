@@ -1,19 +1,23 @@
-from mcp.server.fastmcp import FastMCP
-from smithery.decorators import smithery
 import uuid
-import os
 from typing import Dict, List
+from mcp.server.fastmcp import Context, FastMCP
+from smithery.decorators import smithery
 
-# Storage defined at module level
+# Global storage for the demo
 NOTES: Dict[str, dict] = {}
 
 @smithery.server()
 def create_server():
-    """Smithery calls this to initialize the server session."""
+    """
+    Smithery factory function. 
+    The decorator 'enhances' FastMCP for production deployment.
+    """
+    # Create the FastMCP instance
     mcp = FastMCP("Note Taker MCP")
 
     @mcp.tool()
-    def create_note(title: str, content: str, tags: List[str] = []) -> dict:
+    def create_note(title: str, content: str, ctx: Context, tags: List[str] = []) -> dict:
+        """Create a new note. The 'ctx' argument is required by Smithery."""
         note_id = str(uuid.uuid4())
         NOTES[note_id] = {
             "note_id": note_id,
@@ -24,18 +28,21 @@ def create_server():
         return {"status": "created", "note_id": note_id}
 
     @mcp.tool()
-    def append_note(note_id: str, content: str) -> dict:
+    def append_note(note_id: str, content: str, ctx: Context) -> dict:
+        """Add text to an existing note."""
         if note_id not in NOTES:
             return {"error": "Note not found"}
         NOTES[note_id]["content"] += "\n" + content
         return {"status": "updated", "note_id": note_id}
 
     @mcp.tool()
-    def get_note(note_id: str) -> dict:
+    def get_note(note_id: str, ctx: Context) -> dict:
+        """Retrieve a note by its unique ID."""
         return NOTES.get(note_id, {"error": "Note not found"})
 
     @mcp.tool()
-    def search_notes(query: str) -> list:
+    def search_notes(query: str, ctx: Context) -> list:
+        """Search notes by title or content."""
         return [
             note for note in NOTES.values()
             if query.lower() in note["title"].lower()
@@ -44,11 +51,7 @@ def create_server():
 
     return mcp
 
-def main():
-    """For local testing only."""
-    server = create_server()
-    port = int(os.getenv("PORT", 8000))
-    server.run(transport="sse", host="0.0.0.0", port=port)
-
 if __name__ == "__main__":
-    main()
+    # This allows 'uv run dev' to work locally
+    server = create_server()
+    server.run()
