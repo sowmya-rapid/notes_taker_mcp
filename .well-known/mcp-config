@@ -1,4 +1,5 @@
 {
-  "name": "note-taker-mcp",
-  "protocol": "mcp"
+  "mcp": {
+    "transport": "sse"
+  }
 }
