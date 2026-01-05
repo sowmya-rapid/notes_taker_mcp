@@ -2,17 +2,20 @@
 name = "note-taker-mcp"
 version = "0.1.0"
 dependencies = [
-  "mcp>=1.25.0",
-  "smithery>=0.4.4",
+    "mcp>=1.25.0",
+    "smithery>=0.4.4",
+    "uvicorn>=0.30.0",
+    "sse-starlette>=2.0.0"
 ]
 
 [project.scripts]
+# This defines the command 'note-taker-mcp'
 note-taker-mcp = "note_taker_mcp_server:main"
 
 [tool.smithery]
-# This tells Smithery to look in note_taker_mcp_server.py for create_server()
+# FORMAT: "filename_without_extension:function_name"
 server = "note_taker_mcp_server:create_server"
 
 [build-system]
-requires = ["setuptools"]
+requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"

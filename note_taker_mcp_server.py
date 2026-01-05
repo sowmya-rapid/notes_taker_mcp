@@ -1,14 +1,15 @@
 from mcp.server.fastmcp import FastMCP
 from smithery.decorators import smithery
 import uuid
+import os
 from typing import Dict, List
 
-# In-memory storage
+# Storage defined at module level
 NOTES: Dict[str, dict] = {}
 
 @smithery.server()
 def create_server():
-    """Factory function that Smithery uses to start your server."""
+    """Smithery calls this to initialize the server session."""
     mcp = FastMCP("Note Taker MCP")
 
     @mcp.tool()
@@ -43,10 +44,11 @@ def create_server():
 
     return mcp
 
-# Keep this for local testing, but Smithery will ignore it
 def main():
+    """For local testing only."""
     server = create_server()
-    server.run()
+    port = int(os.getenv("PORT", 8000))
+    server.run(transport="sse", host="0.0.0.0", port=port)
 
 if __name__ == "__main__":
     main()
